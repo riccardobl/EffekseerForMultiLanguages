@@ -1,3 +1,13 @@
+
+################# CONFIGURATIONS #####################################################
+# >> Configure BINTRAY RELEASE
+#   Configure the following secrets/variables (customize the values with your own)
+#     BINTRAY_MAVEN_REPO=riccardoblsandbox/jmonkeyengine
+#     BINTRAY_USER=riccardo
+#     BINTRAY_APIKEY=XXXXXX
+#     BINTRAY_LICENSE="BSD 3-Clause"
+#############################################
+
 on:
   push:
     branches:
@@ -230,6 +240,10 @@ jobs:
     name: Deploy
     runs-on:  ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+            fetch-depth: 1
+            
       - name: Download Maven Artifacts
         uses: actions/download-artifact@v1
         with:
@@ -251,6 +265,18 @@ jobs:
               curl -X PUT  $dest -H "Authorization: token  ${{ secrets.GITHUB_TOKEN }}" --upload-file $file -vvv
           done
           set +f
+
+      - name: Deploy Maven Artifacts to Bintray
+        if: github.event_name == 'release'
+        run: |
+          source .github/actions/tools/uploadToMaven.sh
+          if [ "${{ secrets.BINTRAY_MAVEN_REPO }}" = "" ];
+          then
+            echo "Configure the following secrets to enable bintray deployment"
+            echo "BINTRAY_MAVEN_REPO, BINTRAY_USER, BINTRAY_APIKEY"
+          else
+            uploadAllToMaven maven/ https://api.bintray.com/maven/${{ secrets.BINTRAY_MAVEN_REPO }} ${{ secrets.BINTRAY_USER }} ${{ secrets.BINTRAY_APIKEY }} "https://github.com/${GITHUB_REPOSITORY}" "${{ secrets.BINTRAY_LICENSE }}"
+          fi
 
   windowsExamples:
     name: Build Windows Samples
