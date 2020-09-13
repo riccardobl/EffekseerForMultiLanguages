@@ -2,11 +2,13 @@ on:
   push:
     branches:
       - master
+      - jme
   release:
     types: [published]
   pull_request:
     branches:
       - master
+      - jme
 jobs:
 
   buildNative:
@@ -35,6 +37,14 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+
+
+      - name: Apply soft particles patch
+        shell: bash
+        run: |
+          git clone https://github.com/riccardobl/jme-effekseerNative jme-effekseerNative
+          chmod +x  jme-effekseerNative/src/patches/patcher.sh 
+          EFFKSEER_DIR="src/cpp/Effekseer" jme-effekseerNative/src/patches/patcher.sh 
       
       - name: Install dependencies for ubuntu-latest
         if: matrix.os == 'ubuntu-latest'
