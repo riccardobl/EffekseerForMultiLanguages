@@ -64,7 +64,9 @@ jobs:
           cmake -D BUILD_DX12=OFF -D BUILD_EXAMPLES=OFF ..
           cmake --build . --config Release
 
-          cp -v src/cpp/Release/*.${{ matrix.libExt }} ./dist-native||cp -v src/cpp/*.${{ matrix.libExt }} ./dist-native
+          dest="dist-native/${{ matrix.name }}/x86_64"
+          mkdir -p "$dest"
+          cp -v src/cpp/Release/*.${{ matrix.libExt }} "$dest"||cp -v src/cpp/*.${{ matrix.libExt }} "$dest"
 
       - name: Upload Natives
         uses: actions/upload-artifact@v1
@@ -107,9 +109,25 @@ jobs:
       - name: Build Maven Artifacts
         shell: bash
         run: |
-          mkdir -p build/java-natives
-          cp -R build/dist-natives/*Java* build/java-natives
-          
+          cdd=$PWD
+          cd build/dist-natives/
+          for pl in *; do
+              if [ -d "$pl" ]; then
+                cd $pl
+                for arch in *; do
+                  if [ -d "$arch" ]; then
+                    cd $arch
+                    mkdir -p $cdd/build/java-natives/$pl/$arch/
+                    cp -R *Java* $cdd/build/java-natives/$pl/$arch/
+                    cd ..
+                  fi
+                done
+                cd ..
+              fi
+          done
+          cd "$cdd"
+         
+
           export VERSION="`if [[ $GITHUB_REF == refs\/tags* ]]; then echo ${GITHUB_REF//refs\/tags\//}; fi`"
           if [ "$VERSION" = "" ];
           then
@@ -159,8 +177,26 @@ jobs:
       - name: Build C# Library
         shell: bash
         run: |
-          mkdir -p build/dist-csharp
-          cp -R build/dist-natives/*CSharp* build/dist-csharp
+    
+
+          cdd=$PWD
+          cd build/dist-natives/
+          for pl in *; do
+              if [ -d "$pl" ]; then
+                cd $pl
+                for arch in *; do
+                  if [ -d "$arch" ]; then
+                    cd $arch
+                    mkdir -p $cdd/build/dist-csharp/$pl/$arch/
+                    cp -R *CSharp* $cdd/build/dist-csharp/$pl/$arch/
+                    cd ..
+                  fi
+                done
+                cd ..
+              fi
+          done
+          cd "$cdd"
+         
 
           cd src
           chmod +x ./generate_swig_wrapper.sh
