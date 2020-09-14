@@ -49,4 +49,6 @@ public:
 	void SetDynamicInput(int handle,int32_t index,float value);
 
 	float GetDynamicInput(int handle,int32_t index);
+
+	void LaunchWorkerThreads(int32_t n);
 };

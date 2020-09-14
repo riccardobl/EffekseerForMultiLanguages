@@ -119,6 +119,10 @@ bool EffekseerManagerCore::Initialize(int32_t spriteMaxCount)
 	return true;
 }
 
+void EffekseerManagerCore::LaunchWorkerThreads(int32_t n){
+	manager_->LaunchWorkerThreads(n);
+}
+
 void EffekseerManagerCore::Update(float deltaFrames)
 {
 	if (manager_ == nullptr)
