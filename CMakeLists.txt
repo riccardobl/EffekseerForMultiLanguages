@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
+set(CMAKE_VERBOSE_MAKEFILE ON)
 project(EffekseerForMultiLanguages LANGUAGES C CXX)
 
 option(USE_MSVC_RUNTIME_LIBRARY_DLL OFF)
