@@ -47,17 +47,18 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-
-
-      - name: Install dependencies for ubuntu-latest
-        if: matrix.os == 'ubuntu-latest'
+  
+      - name: Install dependencies for linux
+        if: matrix.name == 'linux'
         run: sudo apt update && sudo apt install libpulse-dev libglvnd-dev libx11-dev libopenal-dev libvulkan-dev libgl1-mesa-dev libgles2-mesa-dev libglu1-mesa-dev libgtk-3-dev ninja-build swig
 
-      - name: Install dependencies for windows-latest
-        if: matrix.os == 'windows-latest'
+      - name: Install dependencies for windows
+        if: matrix.name == 'windows'
         uses: crazy-max/ghaction-chocolatey@v1
         with:
           args: install swig 
+  
+
 
       - name: Apply soft particles patch
         shell: bash
@@ -74,19 +75,37 @@ jobs:
           ./generate_swig_wrapper.${{ matrix.scriptExt }}
           cd ..
 
+
+      - name: Setup VSWhere.exe
+        if: matrix.name == 'windows'
+        uses: warrenbuckley/Setup-VSWhere@v1         
+
       - name: Build natives for ${{ matrix.name }}
         shell: bash
         run: |  
+          if [ "${{ matrix.name }}" = "windows" ];
+          then
+              source .github/actions/tools/devenv.sh
+          fi
+
           mkdir -p build/dist-native
 
           cd build
-
-          cmake -D BUILD_DX12=OFF -D BUILD_EXAMPLES=OFF ..
+          
+ 
+      
+          cmake -DCMAKE_BUILD_TYPE=Release  -D USE_OPENGLES2=OFF -D USE_OPENGLES3=OFF -D USE_OPENGL3=ON -D BUILD_UNITYPLUGIN=OFF -D BUILD_METAL=OFF -D BUILD_DX12=OFF -D USE_OSM=OFF -D BUILD_VIEWER=OFF -D USE_DSOUND=OFF -D USE_XAUDIO2=OFF -D USE_OPENAL=OFF -D BUILD_EDITOR=OFF -D BUILD_VULKAN=OFF -D USE_MSVC_RUNTIME_LIBRARY_DLL=OFF -D BUILD_EXAMPLES=OFF ..
           cmake --build . --config Release
 
           dest="dist-native/${{ matrix.name }}/x86_64"
           mkdir -p "$dest"
           cp -v src/cpp/Release/*.${{ matrix.libExt }} "$dest"||cp -v src/cpp/*.${{ matrix.libExt }} "$dest"
+
+      - name: Upload Build Dir
+        uses: actions/upload-artifact@v1
+        with:
+          name: build-dir-${{ matrix.name }}
+          path: build
 
       - name: Upload Natives
         uses: actions/upload-artifact@v1
@@ -111,7 +130,7 @@ jobs:
           java-version: 1.8
 
       - name: Install dependencies for ubuntu-latest
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.name == 'linux'
         run: sudo apt update && sudo apt install swig
 
       - name: Download Natives (linux)
@@ -178,7 +197,7 @@ jobs:
             submodules: true
 
       - name: Install dependencies for ubuntu-latest
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.name == 'linux'
         run: sudo apt update && sudo apt install swig
 
       - name: Download Natives (linux)
@@ -277,32 +296,3 @@ jobs:
           else
             uploadAllToMaven maven/ https://api.bintray.com/maven/${{ secrets.BINTRAY_MAVEN_REPO }} ${{ secrets.BINTRAY_USER }} ${{ secrets.BINTRAY_APIKEY }} "https://github.com/${GITHUB_REPOSITORY}" "${{ secrets.BINTRAY_LICENSE }}"
           fi
-
-  windowsExamples:
-    name: Build Windows Samples
-    runs-on: vs2017-win2016
-    steps:
-      - uses: actions/checkout@v2
-        with:
-            fetch-depth: 1
-            submodules: true
-      
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-
-        
-      - name: Build
-        run: |
-         cd examples
-         python build_libGtxSample.py
-        shell: cmd
-
-      - name: libGDX_Sample
-        uses: actions/upload-artifact@v1
-        with:
-          name: libGdxSample-windows
-          path: examples/libGdxSample
-
-

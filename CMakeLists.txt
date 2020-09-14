@@ -1,13 +1,27 @@
-cmake_minimum_required(VERSION 3.15)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+cmake_minimum_required(VERSION 3.15.7)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+set(VERBOSE ON)
 project(EffekseerForMultiLanguages LANGUAGES C CXX)
 
+
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 option(USE_MSVC_RUNTIME_LIBRARY_DLL OFF)
+
 
 # Flags
 if (WIN32)
   if (NOT USE_MSVC_RUNTIME_LIBRARY_DLL)
+
+    if(MSVC)
+        add_compile_options(
+            $<$<CONFIG:>:/MT> #---------|
+            $<$<CONFIG:Debug>:/MTd> #---|-- Statically link the runtime libraries
+            $<$<CONFIG:Release>:/MT> #--|
+        )
+    endif()
+
+
     foreach (flag CMAKE_C_FLAGS
       CMAKE_C_FLAGS_DEBUG
       CMAKE_C_FLAGS_RELEASE
@@ -28,5 +42,6 @@ endif()
 if(UNIX AND NOT APPLE)
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}   -Wl,--start-group ")
 endif()
+
 
 add_subdirectory(src)
