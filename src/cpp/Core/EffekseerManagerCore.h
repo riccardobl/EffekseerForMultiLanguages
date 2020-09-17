@@ -21,10 +21,13 @@ public:
 	~EffekseerManagerCore();
 
 	bool Initialize(int32_t spriteMaxCount);
+	bool Initialize(int32_t spriteMaxCount, bool gl2);
 
 	void Update(float deltaFrames);
 
 	int Play(EffekseerEffectCore* effect);
+	
+	void Stop(int handle);
 
 	void SetPaused(int handle,bool v);
 

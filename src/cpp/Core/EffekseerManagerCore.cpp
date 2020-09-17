@@ -88,8 +88,12 @@ EffekseerManagerCore::~EffekseerManagerCore()
 		renderer_ = nullptr;
 	}
 }
-
 bool EffekseerManagerCore::Initialize(int32_t spriteMaxCount)
+{
+	return this->Initialize(spriteMaxCount,false);
+}
+
+bool EffekseerManagerCore::Initialize(int32_t spriteMaxCount, bool gl2)
 {
 	if (manager_ != nullptr || renderer_ != nullptr)
 	{
@@ -97,7 +101,7 @@ bool EffekseerManagerCore::Initialize(int32_t spriteMaxCount)
 	}
 
 	manager_ = ::Effekseer::Manager::Create(spriteMaxCount);
-	renderer_ = ::EffekseerRendererGL::Renderer::Create(spriteMaxCount, EffekseerRendererGL::OpenGLDeviceType::OpenGL3);
+	renderer_ = ::EffekseerRendererGL::Renderer::Create(spriteMaxCount, gl2?EffekseerRendererGL::OpenGLDeviceType::OpenGL2:EffekseerRendererGL::OpenGLDeviceType::OpenGL3);
 
 	if (manager_ == nullptr || renderer_ == nullptr)
 	{
@@ -145,6 +149,12 @@ int EffekseerManagerCore::Play(EffekseerEffectCore* effect)
 		return -1;
 	}
 	return manager_->Play(effect->GetInternal(), ::Effekseer::Vector3D());
+}
+
+
+void EffekseerManagerCore::Stop(int handle)
+{
+	return manager_->StopEffect(handle);
 }
 
 void EffekseerManagerCore::SetShown(int handle, bool v)
