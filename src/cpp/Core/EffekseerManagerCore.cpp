@@ -123,6 +123,40 @@ bool EffekseerManagerCore::Initialize(int32_t spriteMaxCount, bool gl2)
 	return true;
 }
 
+void EffekseerManagerCore::BeginUpdate()
+{
+	if (manager_ == nullptr)
+	{
+		return;
+	}
+
+	manager_->BeginUpdate();
+
+}
+
+void EffekseerManagerCore::EndUpdate()
+{
+	if (manager_ == nullptr)
+	{
+		return;
+	}
+
+	manager_->EndUpdate();
+
+}
+
+void EffekseerManagerCore::UpdateHandleToMoveToFrame(int handle,float v){
+	if (manager_ == nullptr)
+	{
+		return;
+	}
+
+	manager_->UpdateHandleToMoveToFrame(handle,v);
+}
+
+
+
+
 void EffekseerManagerCore::LaunchWorkerThreads(int32_t n){
 	manager_->LaunchWorkerThreads(n);
 }

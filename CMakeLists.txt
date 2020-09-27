@@ -6,8 +6,9 @@ project(EffekseerForMultiLanguages LANGUAGES C CXX)
 
  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-option(USE_MSVC_RUNTIME_LIBRARY_DLL OFF)
 
+
+option(USE_MSVC_RUNTIME_LIBRARY_DLL OFF) 
 
 # Flags
 if (WIN32)
@@ -36,11 +37,13 @@ if (WIN32)
         string(REGEX REPLACE "/MDd" "/MTd" ${flag} "${${flag}}")
       endif()
     endforeach()
+
   endif()
 endif()
 
+
 if(UNIX AND NOT APPLE)
-  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}   -Wl,--start-group ")
+   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}   -Wl,--start-group ") 
 endif()
 
 

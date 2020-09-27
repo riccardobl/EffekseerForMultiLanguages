@@ -25,6 +25,13 @@ public:
 
 	void Update(float deltaFrames);
 
+	void BeginUpdate();
+
+	void EndUpdate();
+
+	void UpdateHandleToMoveToFrame(int handle, float v);
+	
+
 	int Play(EffekseerEffectCore* effect);
 	
 	void Stop(int handle);
