@@ -88,12 +88,10 @@ EffekseerManagerCore::~EffekseerManagerCore()
 		renderer_ = nullptr;
 	}
 }
-bool EffekseerManagerCore::Initialize(int32_t spriteMaxCount)
-{
-	return this->Initialize(spriteMaxCount,false);
-}
 
-bool EffekseerManagerCore::Initialize(int32_t spriteMaxCount, bool gl2)
+
+
+bool EffekseerManagerCore::Initialize(int32_t spriteMaxCount, bool srgbMode,bool gl2 )
 {
 	if (manager_ != nullptr || renderer_ != nullptr)
 	{
@@ -110,7 +108,7 @@ bool EffekseerManagerCore::Initialize(int32_t spriteMaxCount, bool gl2)
 		return false;
 	}
 
-	auto setting = EffekseerSettingCore::create();
+	auto setting = EffekseerSettingCore::create(srgbMode);
 	manager_->SetSetting(setting);
 	ES_SAFE_RELEASE(setting);
 
