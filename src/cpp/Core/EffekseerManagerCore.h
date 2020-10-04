@@ -47,15 +47,17 @@ public:
 
 	void SetEffectTransformBaseMatrix(int handle,float v0,float v1,float v2,float v3,float v4,float v5,float v6,float v7,float v8,float v9,float v10,float v11);
 
-	void DrawBack();
+	void DrawBack(int layer=1);
 
-	void DrawFront();
+	void DrawFront(int layer=1);
 
 	void SetProjectionMatrix(float v0,float v1,float v2,float v3,float v4,float v5,float v6,float v7,float v8,float v9,float v10,float v11,float v12,float v13,float v14,float v15);
 	
 	void SetCameraMatrix(float v0,float v1,float v2,float v3,float v4,float v5,float v6,float v7,float v8,float v9,float v10,float v11,float v12,float v13,float v14,float v15);
 	
 	bool Exists(int handle);
+
+	void SetLayer(int handle,int layer);
 
 	void SetViewProjectionMatrixWithSimpleWindow(int32_t windowWidth, int32_t windowHeight);
 

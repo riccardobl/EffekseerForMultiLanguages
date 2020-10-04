@@ -223,7 +223,7 @@ void EffekseerManagerCore::SetPaused(int handle, bool v)
 	manager_->SetPaused(handle,v);
 }
 
-void EffekseerManagerCore::DrawBack()
+void EffekseerManagerCore::DrawBack(int layer)
 {
 	if (manager_ == nullptr)
 	{
@@ -231,11 +231,13 @@ void EffekseerManagerCore::DrawBack()
 	}
 
 	renderer_->BeginRendering();
-	manager_->DrawBack();
+	Effekseer::Manager::DrawParameter params;
+	params.CameraCullingMask=layer;
+	manager_->DrawBack(params);	
 	renderer_->EndRendering();
 }
 
-void EffekseerManagerCore::DrawFront()
+void EffekseerManagerCore::DrawFront(int layer)
 {
 	if (manager_ == nullptr)
 	{
@@ -243,7 +245,9 @@ void EffekseerManagerCore::DrawFront()
 	}
 	
 	renderer_->BeginRendering();
-	manager_->DrawFront();
+	Effekseer::Manager::DrawParameter params;
+	params.CameraCullingMask=layer;
+	manager_->DrawFront(params);
 	renderer_->EndRendering();
 }
 
@@ -252,6 +256,11 @@ bool EffekseerManagerCore::Exists(int handle)
 	return manager_->Exists(handle);
 }
 
+
+void EffekseerManagerCore::SetLayer(int handle,int layer)
+{
+	return manager_->SetLayer(handle,layer);
+}
 
 void EffekseerManagerCore::SetProjectionMatrix(float v0,float v1,float v2,float v3,float v4,float v5,float v6,float v7,float v8,float v9,float v10,float v11,float v12,float v13,float v14,float v15)
 {
