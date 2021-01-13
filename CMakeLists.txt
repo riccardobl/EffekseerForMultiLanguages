@@ -41,7 +41,6 @@ if (WIN32)
       endif()
     endforeach()
   endif()
-  message(${CMAKE_MSVC_RUNTIME_LIBRARY})
 endif()
 
 
