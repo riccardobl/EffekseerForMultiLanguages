@@ -146,8 +146,33 @@ void EffekseerManagerCore::UpdateHandleToMoveToFrame(int handle,float v){
 	manager_->UpdateHandleToMoveToFrame(handle,v);
 }
 
+void EffekseerManagerCore::UnsetBackground(){
+	this->SetBackground(-1);
+}
 
+void EffekseerManagerCore::SetBackground(uint32_t glid){
+	::EffekseerRendererGL::Renderer *render=reinterpret_cast<::EffekseerRendererGL::Renderer*>(renderer_->GetRef());
+	render->SetBackground(glid);
+}
 
+void EffekseerManagerCore::SetDepth(uint32_t glid, bool hasMipmap, float DepthBufferScale,float DepthBufferOffset, float ProjectionMatrix33, float ProjectionMatrix34, float ProjectionMatrix43, float ProjectionMatrix44){
+	::EffekseerRenderer::DepthReconstructionParameter params;
+	params.DepthBufferScale=DepthBufferScale;
+	params.DepthBufferOffset=DepthBufferOffset;
+	params.ProjectionMatrix33=ProjectionMatrix33;
+	params.ProjectionMatrix34=ProjectionMatrix34;
+	params.ProjectionMatrix43=ProjectionMatrix43;
+	params.ProjectionMatrix44=ProjectionMatrix44;	
+
+	::EffekseerRendererGL::Renderer *render=reinterpret_cast<::EffekseerRendererGL::Renderer*>(renderer_->GetRef());
+	render->SetDepth(glid,params,false);
+}
+
+void EffekseerManagerCore::UnsetDepth(){
+	::EffekseerRenderer::DepthReconstructionParameter params;
+	::EffekseerRendererGL::Renderer *render=reinterpret_cast<::EffekseerRendererGL::Renderer*>(renderer_->GetRef());
+	render->SetDepth(-1,params,false);
+}
 
 void EffekseerManagerCore::LaunchWorkerThreads(int32_t n){
 	manager_->LaunchWorkerThreads(n);

@@ -9,13 +9,31 @@ namespace EffekseerRenderer
 class Renderer;
 }
 
+// class DistortingCallBackProxy : public EffekseerRenderer::DistortingCallback
+// {
+// private:
+// 	uint32_t id;
+// public:
+// 	void SetTexture(uint32_t id){
+// 		this->id=id;
+// 	}
+// 	DistortingCallBackProxy(){}
+
+// 	virtual bool OnDistorting(EffekseerRenderer::Renderer* renderer) override
+// 	{	
+// 		reinterpret_cast<::EffekseerRendererGL::Renderer*>(renderer)->SetBackground(id);
+// 		return true;
+// 	}
+// };
+
 class EffekseerManagerCore
 {
 private:
 	::Effekseer::ManagerRef manager_ = nullptr;
 	::EffekseerRenderer::RendererRef renderer_ = nullptr;
 	float restDeltaTime_ = 0.0f;
-
+	// DistortingCallBackProxy *distortingCallbackProxy = nullptr;
+	 
 public:
 	EffekseerManagerCore() = default;
 	~EffekseerManagerCore();
@@ -117,4 +135,12 @@ public:
 	float GetDynamicInput(int handle, int32_t index);
 
 	void LaunchWorkerThreads(int32_t n);
+
+	void SetBackground(uint32_t glid);
+
+	void UnsetBackground();
+
+	void SetDepth(uint32_t glid, bool hasMipmap, float DepthBufferScale,float DepthBufferOffset, float ProjectionMatrix33, float ProjectionMatrix34, float ProjectionMatrix43, float ProjectionMatrix44);
+
+	void UnsetDepth();
 };

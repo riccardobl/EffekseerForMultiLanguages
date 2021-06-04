@@ -1,3 +1,4 @@
 [submodule "src/cpp/Effekseer"]
 	path = src/cpp/Effekseer
-	url = https://github.com/effekseer/Effekseer.git
+	url = https://github.com/riccardobl/Effekseer.git
+	branch = rblb
