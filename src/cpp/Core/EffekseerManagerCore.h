@@ -32,7 +32,8 @@ private:
 	::Effekseer::ManagerRef manager_ = nullptr;
 	::EffekseerRenderer::RendererRef renderer_ = nullptr;
 	float restDeltaTime_ = 0.0f;
-	// DistortingCallBackProxy *distortingCallbackProxy = nullptr;
+	::Effekseer::Backend::TextureRef backgroundtx_;
+	::Effekseer::Backend::TextureRef depthtx_;
 	 
 public:
 	EffekseerManagerCore() = default;
@@ -138,11 +139,11 @@ public:
 
 	void LaunchWorkerThreads(int32_t n);
 
-	void SetBackground(uint32_t glid);
+	void SetBackground(uint32_t glid,bool hasMipmap);
 
 	void UnsetBackground();
 
-	void SetDepth(uint32_t glid, bool hasMipmap, float DepthBufferScale,float DepthBufferOffset, float ProjectionMatrix33, float ProjectionMatrix34, float ProjectionMatrix43, float ProjectionMatrix44);
+	void SetDepth(uint32_t glid, bool hasMipmap);
 
 	void UnsetDepth();
 };
